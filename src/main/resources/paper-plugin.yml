@@ -1,0 +1,4 @@
+name: TelosDemo
+version: '1.0-SNAPSHOT'
+main: dev.magnetite.telosdemo.TelosDemo
+api-version: '1.21'
