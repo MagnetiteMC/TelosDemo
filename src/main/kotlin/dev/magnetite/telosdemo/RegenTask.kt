@@ -9,17 +9,21 @@ import org.bukkit.Registry
 import org.bukkit.enchantments.Enchantment
 
 
-class RegenTask(private val plugin: TelosDemo) : Runnable {
-    val enchantmentRegistry: Registry<Enchantment> = RegistryAccess.registryAccess().getRegistry<Enchantment>(RegistryKey.ENCHANTMENT);
-    val enchantment: Enchantment = enchantmentRegistry.getOrThrow(
-        TypedKey.create(
-            RegistryKey.ENCHANTMENT, Key.key("telosdemo:regeneration")
-        )
-    )
+class RegenTask() : Runnable {
+    val enchantmentRegistry: Registry<Enchantment> =
+        RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT)
 
+    // Get the custom Regeneration enchantment
+    val enchantment: Enchantment = enchantmentRegistry.getOrThrow(TypedKey.create(
+            RegistryKey.ENCHANTMENT, Key.key("telosdemo:regeneration")
+    ))
+
+    // Get each player with the regeneration enchant, and heal them .5 * level
     override fun run() {
-        Bukkit.getOnlinePlayers().filter { player -> player.inventory.chestplate?.containsEnchantment(enchantment) == true }.forEach {
-            player -> player.heal(.5) // TODO: based on level
-        }
+        Bukkit.getOnlinePlayers()
+            .filter { player -> player.inventory.chestplate?.containsEnchantment(enchantment) == true }
+            .forEach { player ->
+                player.heal(.5 * player.inventory.chestplate!!.getEnchantmentLevel(enchantment))
+            }
     }
 }
